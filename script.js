@@ -4,9 +4,9 @@
 // ==========================================
 // CONFIGURATION: CREDENTIALS
 // ==========================================
-const BIN_ID = 'YOUR_ACTUAL_BIN_ID_HERE';
-const API_KEY = 'YOUR_ACTUAL_MASTER_KEY_HERE';
-const GEMINI_API_KEY = 'YOUR_GEMINI_API_KEY_HERE'; // Get free from aistudio.google.com
+const BIN_ID = '__BIN_ID__';
+const API_KEY = '__API_KEY__';
+const GEMINI_API_KEY = '__GEMINI_API_KEY__';
 // ==========================================
 
 let documents = [];
