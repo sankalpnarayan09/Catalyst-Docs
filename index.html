@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catalyst Docs (Billion Dollar PDFs)</title>
+    <style>
+        :root {
+            --bg-color: #f4f0ea;
+            --card-bg: #fcfbfa;
+            --text-main: #1a1a1a;
+            --text-muted: #666666;
+            --border-color: #e3ded5;
+            --tag-bg: #eee9e0;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --text-main: #f0f0f0;
+            --text-muted: #a0a0a0;
+            --border-color: #333333;
+            --tag-bg: #2a2a2a;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.5;
+            padding: 30px 20px;
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .logo {
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            font-size: 16px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-main);
+            text-decoration: none;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            text-decoration: underline;
+        }
+
+        .theme-toggle {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 5px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            color: var(--text-main);
+            font-size: 13px;
+        }
+
+        .hero {
+            margin-bottom: 24px;
+        }
+
+        .hero h1 {
+            font-size: 38px;
+            font-weight: 400;
+            letter-spacing: -1px;
+            margin-bottom: 12px;
+        }
+
+        .hero p {
+            max-width: 750px;
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .tracks-bar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+            padding-bottom: 6px;
+        }
+
+        .track-btn {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .track-btn.active, .track-btn:hover {
+            background: var(--text-main);
+            color: var(--bg-color);
+            border-color: var(--text-main);
+        }
+
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+
+        .search-input {
+            flex: 1;
+            min-width: 250px;
+            padding: 10px 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background: var(--card-bg);
+            color: var(--text-main);
+            font-size: 14px;
+            outline: none;
+        }
+
+        .dropdown {
+            padding: 10px 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background: var(--card-bg);
+            color: var(--text-main);
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .doc-count {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-muted);
+        }
+
+        .badges {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .card-category {
+            background: var(--tag-bg);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 10px;
+        }
+
+        .impact-badge {
+            background: rgba(19, 115, 51, 0.15);
+            color: #137333;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .card-content h2 {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            line-height: 1.3;
+        }
+
+        .card-content p {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            border-top: 1px solid var(--border-color);
+            padding-top: 12px;
+        }
+
+        .meta-info {
+            color: var(--text-muted);
+        }
+
+        .footer-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .upvote-btn {
+            background: none;
+            border: 1px solid var(--border-color);
+            padding: 3px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 11px;
+            display: flex;
+            gap: 4px;
+            align-items: center;
+            color: var(--text-muted);
+        }
+
+        .upvote-btn.voted {
+            border-color: #137333;
+            color: #137333;
+            font-weight: bold;
+        }
+
+        .read-link {
+            color: var(--text-main);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .read-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 30px;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 500px;
+            color: var(--text-main);
+        }
+
+        .modal h2 {
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+
+        .modal textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 12px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-color);
+            color: var(--text-main);
+            border-radius: 6px;
+            font-size: 14px;
+            height: 90px;
+            outline: none;
+        }
+
+        .upload-dropzone {
+            border: 2px dashed var(--border-color);
+            padding: 20px;
+            text-align: center;
+            border-radius: 6px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+
+        .upload-dropzone:hover {
+            border-color: var(--text-main);
+        }
+
+        .modal-btns {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            font-size: 13px;
+            background: var(--tag-bg);
+            color: var(--text-main);
+        }
+
+        .btn-primary {
+            background: var(--text-main);
+            color: var(--bg-color);
+            border-color: var(--text-main);
+        }
+
+        .site-footer {
+            margin-top: 60px;
+            border-top: 1px solid var(--border-color);
+            padding-top: 24px;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .site-footer a {
+            color: var(--text-main);
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body data-theme="light">
+
+    <div class="container">
+        <header>
+            <div class="logo">Catalyst Docs</div>
+            <div class="nav-links">
+                <button class="theme-toggle" onclick="toggleDarkMode()">🌓 Theme</button>
+                <a onclick="openModal()">Suggest →</a>
+            </div>
+        </header>
+
+        <div class="hero">
+            <h1>Catalyst Docs</h1>
+            <p>An open directory of memos, white papers, essays, and decks that changed capital allocation.</p>
+        </div>
+
+        <div class="tracks-bar">
+            <button class="track-btn active" onclick="filterTrack('ALL')">All Documents</button>
+            <button class="track-btn" onclick="filterTrack('AI')">🚀 Foundational AI Leap</button>
+            <button class="track-btn" onclick="filterTrack('CRYPTO')">⚡ Crypto Paradigm Shift</button>
+            <button class="track-btn" onclick="filterTrack('MACRO')">🌍 Macro & Capital Shifts</button>
+        </div>
+
+        <div class="controls">
+            <input type="text" id="searchInput" class="search-input" placeholder="search title, author, thesis…" onkeyup="applyFilters()">
+            <select id="categoryFilter" class="dropdown" onchange="applyFilters()">
+                <option value="">All categories</option>
+                <option value="TECHNICAL PAPER">Technical Paper</option>
+                <option value="AI ESSAY">AI Essay</option>
+                <option value="WORLDVIEW">Worldview</option>
+                <option value="VC DOCTRINE">VC Doctrine</option>
+                <option value="MACRO MEMO">Macro Memo</option>
+                <option value="SHORT / ACTIVIST">Short / Activist</option>
+            </select>
+            <div class="doc-count" id="docCount" style="margin:0 0 0 auto;"></div>
+        </div>
+
+        <div class="grid" id="cardGrid"></div>
+
+        <footer class="site-footer">
+            <p><strong>Catalyst Docs</strong> &nbsp;·&nbsp; <a onclick="openModal()" style="cursor:pointer;">Suggest a document →</a> © 2026</p>
+        </footer>
+    </div>
+
+    <!-- AI Suggest / Upload Modal -->
+    <div class="modal-overlay" id="suggestModal">
+        <div class="modal">
+            <h2>AI Document Ingestion</h2>
+            <p style="font-size:13px; color:var(--text-muted); margin-bottom:12px;">Upload a PDF file or paste multiple direct links separated by spaces. Non-real links will be automatically ignored.</p>
+            
+            <div class="upload-dropzone" onclick="document.getElementById('fileInput').click()">
+                📎 Click to browse PDF file or drop here
+                <input type="file" id="fileInput" accept=".pdf" style="display:none" onchange="handleFileUpload(event)">
+            </div>
+
+            <textarea id="linkInput" placeholder="Paste link(s) here separated by spaces (e.g. https://arxiv.org/abs/... https://bitcoin.org/bitcoin.pdf)"></textarea>
+
+            <div class="modal-btns">
+                <button type="button" class="btn" onclick="closeModal()">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="processIngestion()">AI Process & Add</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Complete Master Dataset
+        let documents = [
+            { id: 1, type: "WHITEPAPER", category: "TECHNICAL PAPER", title: "Bitcoin: A Peer-to-Peer Electronic Cash System", thesis: "A decentralized, trustless electronic cash system using proof-of-work to solve double-spending without intermediaries.", meta: "Satoshi Nakamoto 2008", link: "https://bitcoin.org/bitcoin.pdf", impact: "~$1.2T Market Cap", upvotes: 330, track: "CRYPTO" },
+            { id: 2, type: "PAPER", category: "TECHNICAL PAPER", title: "Attention Is All You Need", thesis: "The Transformer architecture, based solely on attention, outperforms recurrence/convolution for sequence modeling.", meta: "Vaswani et al. (Google) 2017", link: "https://arxiv.org/abs/1706.03762", impact: "~$500B+ AI Infrastructure", upvotes: 287, track: "AI" },
+            { id: 3, type: "ESSAY", category: "AI ESSAY", title: "Situational Awareness: The Decade Ahead", thesis: "AGI by ~2027 and superintelligence shortly after will trigger a trillion-dollar compute buildout and a US-China race.", meta: "Leopold Aschenbrenner 2024", link: "https://situational-awareness.ai/", impact: "Trillion-Dollar Capex", upvotes: 138, track: "AI" },
+            { id: 4, type: "WHITEPAPER", category: "TECHNICAL PAPER", title: "Ethereum Whitepaper: A Next-Generation Smart Contract Platform", thesis: "A Turing-complete blockchain enabling arbitrary smart contracts and decentralized applications.", meta: "Vitalik Buterin 2013", link: "https://ethereum.org/en/whitepaper/", impact: "~$400B Ecosystem", upvotes: 260, track: "CRYPTO" },
+            { id: 5, type: "ESSAY", category: "VC DOCTRINE", title: "Why Software Is Eating the World", thesis: "Every company is becoming a software company; software firms will disrupt incumbents across every industry.", meta: "Marc Andreessen 2011", link: "https://a16z.com/why-software-is-eating-the-world/", impact: "Venture Capital Shift", upvotes: 210, track: "MACRO" },
+            { id: 6, type: "ESSAY", category: "WORLDVIEW", title: "The Secret Tesla Motors Master Plan", thesis: "Bootstrap an EV company from the top down: expensive sports car first, followed by progressively cheaper high-volume models.", meta: "Elon Musk 2006", link: "https://www.tesla.com/blog/secret-tesla-motors-master-plan-just-between-you-and-me", impact: "~$800B EV Market", upvotes: 195, track: "MACRO" },
+            { id: 7, type: "PAPER", category: "TECHNICAL PAPER", title: "DeepSeek-R1: Incentivizing Reasoning Capability via RL", thesis: "Reinforcement learning can elicit strong reasoning in LLMs at a fraction of frontier training cost.", meta: "DeepSeek 2025", link: "https://github.com/deepseek-ai/DeepSeek-R1", impact: "Open-Weights Disruption", upvotes: 190, track: "AI" },
+            { id: 8, type: "MEMO", category: "MACRO MEMO", title: "Sea Change", thesis: "A generational shift from falling to elevated rates ends the 40-year tailwind; credit and value are the new winners.", meta: "Howard Marks 2022", link: "https://www.oaktreecapital.com/insights/memo/sea-change", impact: "Trillion-Dollar Allocations", upvotes: 145, track: "MACRO" },
+            { id: 9, type: "REPORT", category: "SHORT / ACTIVIST", title: "Luckin Coffee (Anonymous Report Distributed by Muddy Waters)", thesis: "Luckin Coffee fabricated sales figures; the growth story is a fraud.", meta: "Muddy Waters / Carson Block 2020", link: "https://www.muddywatersresearch.com/", impact: "$10B+ Valuation Wipeout", upvotes: 115, track: "MACRO" }
+        ];
+
+        let activeTrack = 'ALL';
+        let userVotes = JSON.parse(localStorage.getItem('catalyst_user_votes') || '{}');
+
+        // Persist and load from localStorage
+        const savedDocs = localStorage.getItem('catalyst_documents');
+        if (savedDocs) {
+            try { documents = JSON.parse(savedDocs); } catch(e) {}
+        }
+
+        function persistData() {
+            localStorage.setItem('catalyst_documents', JSON.stringify(documents));
+            localStorage.setItem('catalyst_user_votes', JSON.stringify(userVotes));
+        }
+
+        function toggleDarkMode() {
+            const body = document.body;
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            body.setAttribute('data-theme', newTheme);
+        }
+
+        function upvoteDoc(id) {
+            if (userVotes[id]) {
+                alert("You have already upvoted this document.");
+                return;
+            }
+            const doc = documents.find(d => d.id === id);
+            if (doc) {
+                doc.upvotes += 1;
+                userVotes[id] = true;
+                persistData();
+                applyFilters();
+            }
+        }
+
+        function filterTrack(trackName) {
+            activeTrack = trackName;
+            document.querySelectorAll('.track-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            applyFilters();
+        }
+
+        function isValidHttpUrl(string) {
+            try {
+                const url = new URL(string);
+                return url.protocol === "http:" || url.protocol === "https:";
+            } catch (_) {
+                return false;
+            }
+        }
+
+        function handleFileUpload(e) {
+            const file = e.target.files[0];
+            if (file) {
+                document.getElementById('linkInput').value = `local-file://${file.name}`;
+                alert(`Loaded file: "${file.name}". Click 'AI Process & Add' to structure and save it to the site.`);
+            }
+        }
+
+        function processIngestion() {
+            const rawInput = document.getElementById('linkInput').value.trim();
+            if (!rawInput) {
+                alert("Please provide a file or valid links.");
+                return;
+            }
+
+            const tokens = rawInput.split(/\s+/);
+            let addedCount = 0;
+
+            tokens.forEach(token => {
+                let cleanLink = token;
+                let title = "";
+                
+                if (cleanLink.startsWith("local-file://")) {
+                    title = cleanLink.replace("local-file://", "").replace(".pdf", "").replace(/[-_]/g, " ");
+                } else if (!isValidHttpUrl(cleanLink)) {
+                    return; // Skip invalid/fake links completely
+                } else {
+                    title = cleanLink.split('/').pop().split('?')[0].replace(/[-_]/g, " ") || "External Research Document";
+                }
+
+                const newDoc = {
+                    id: Date.now() + Math.floor(Math.random() * 10000),
+                    type: "RESEARCH",
+                    category: "TECHNICAL PAPER",
+                    title: title.charAt(0).toUpperCase() + title.slice(1),
+                    thesis: "AI Extracted Thesis: Introduces framework elements that alter efficiency standards across target markets.",
+                    meta: "Auto-Parsed 2026",
+                    link: cleanLink.startsWith("local-file://") ? "#" : cleanLink,
+                    impact: "~$50B+ Impact",
+                    upvotes: 1,
+                    track: "AI"
+                };
+
+                documents.unshift(newDoc);
+                addedCount++;
+            });
+
+            if (addedCount > 0) {
+                persistData();
+                closeModal();
+                alert(`Successfully processed and added ${addedCount} valid document(s)!`);
+                applyFilters();
+                document.getElementById('linkInput').value = '';
+                document.getElementById('fileInput').value = '';
+            } else {
+                alert("No valid links or files detected. Invalid links were ignored.");
+            }
+        }
+
+        function renderCards(data) {
+            const grid = document.getElementById('cardGrid');
+            grid.innerHTML = '';
+            
+            data.forEach(doc => {
+                const hasVoted = userVotes[doc.id] ? 'voted' : '';
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <div>
+                        <div class="card-header">
+                            <span>${doc.type}</span>
+                            <div class="badges">
+                                <span class="impact-badge">${doc.impact}</span>
+                                <span class="card-category">${doc.category}</span>
+                            </div>
+                        </div>
+                        <div class="card-content">
+                            <h2>${doc.title}</h2>
+                            <p>${doc.thesis}</p>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <span class="meta-info">${doc.meta}</span>
+                        <div class="footer-actions">
+                            <button class="upvote-btn ${hasVoted}" onclick="upvoteDoc(${doc.id})">▲ ${doc.upvotes}</button>
+                            <a href="${doc.link}" target="_blank" class="read-link">Read →</a>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+            document.getElementById('docCount').innerText = `${data.length} documents`;
+        }
+
+        function applyFilters() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const category = document.getElementById('categoryFilter').value;
+
+            let filtered = documents.filter(doc => {
+                const matchesQuery = doc.title.toLowerCase().includes(query) || 
+                                     doc.thesis.toLowerCase().includes(query) || 
+                                     doc.meta.toLowerCase().includes(query);
+                const matchesCategory = category === "" || doc.category === category;
+                const matchesTrack = activeTrack === 'ALL' || doc.track === activeTrack;
+                return matchesQuery && matchesCategory && matchesTrack;
+            });
+
+            // Strict default sorting: most upvoted on top automatically
+            filtered.sort((a, b) => b.upvotes - a.upvotes);
+
+            renderCards(filtered);
+        }
+
+        function openModal() {
+            document.getElementById('suggestModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('suggestModal').style.display = 'none';
+        }
+
+        // Initialize Application
+        applyFilters();
+    </script>
+</body>
+</html>
