@@ -3,6 +3,7 @@
 // ==========================================
 const BIN_ID = '6abeae10ffd5d1605343b688';
 const API_KEY = '$2a$10$N6pdeOTaKA5NmU5j6vmGxelvfNem.mEH0u0f88Q40yKKSQOzPzMFK';
+const GEMINI_API_KEY = 'AQ.Ab8RN6Jmo0stc8Uj3e8xDibHOw5hmgNxF850S3dc0qRHuVO4Dw'; // Get free from aistudio.google.com
 // ==========================================
 
 let documents = [
