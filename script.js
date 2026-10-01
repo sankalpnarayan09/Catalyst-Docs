@@ -1,7 +1,7 @@
 // ==========================================
 // CONFIGURATION: PUT YOUR JSONBIN CREDENTIALS HERE
 // ==========================================
-const BIN_ID = '6abea8a8ffd5d1605343a5bc';
+const BIN_ID = '6abeae10ffd5d1605343b688';
 const API_KEY = '$2a$10$N6pdeOTaKA5NmU5j6vmGxelvfNem.mEH0u0f88Q40yKKSQOzPzMFK';
 // ==========================================
 
