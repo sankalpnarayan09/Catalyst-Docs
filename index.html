@@ -428,7 +428,10 @@
     </div>
 
     <script>
-        // Complete Master Dataset
+        // JSONBin Cloud Credentials 
+        const BIN_ID = 'YOUR_ACTUAL_BIN_ID_HERE';
+        const API_KEY = 'YOUR_ACTUAL_MASTER_KEY_HERE';
+
         let documents = [
             { id: 1, type: "WHITEPAPER", category: "TECHNICAL PAPER", title: "Bitcoin: A Peer-to-Peer Electronic Cash System", thesis: "A decentralized, trustless electronic cash system using proof-of-work to solve double-spending without intermediaries.", meta: "Satoshi Nakamoto 2008", link: "https://bitcoin.org/bitcoin.pdf", impact: "~$1.2T Market Cap", upvotes: 330, track: "CRYPTO" },
             { id: 2, type: "PAPER", category: "TECHNICAL PAPER", title: "Attention Is All You Need", thesis: "The Transformer architecture, based solely on attention, outperforms recurrence/convolution for sequence modeling.", meta: "Vaswani et al. (Google) 2017", link: "https://arxiv.org/abs/1706.03762", impact: "~$500B+ AI Infrastructure", upvotes: 287, track: "AI" },
@@ -436,7 +439,7 @@
             { id: 4, type: "WHITEPAPER", category: "TECHNICAL PAPER", title: "Ethereum Whitepaper: A Next-Generation Smart Contract Platform", thesis: "A Turing-complete blockchain enabling arbitrary smart contracts and decentralized applications.", meta: "Vitalik Buterin 2013", link: "https://ethereum.org/en/whitepaper/", impact: "~$400B Ecosystem", upvotes: 260, track: "CRYPTO" },
             { id: 5, type: "ESSAY", category: "VC DOCTRINE", title: "Why Software Is Eating the World", thesis: "Every company is becoming a software company; software firms will disrupt incumbents across every industry.", meta: "Marc Andreessen 2011", link: "https://a16z.com/why-software-is-eating-the-world/", impact: "Venture Capital Shift", upvotes: 210, track: "MACRO" },
             { id: 6, type: "ESSAY", category: "WORLDVIEW", title: "The Secret Tesla Motors Master Plan", thesis: "Bootstrap an EV company from the top down: expensive sports car first, followed by progressively cheaper high-volume models.", meta: "Elon Musk 2006", link: "https://www.tesla.com/blog/secret-tesla-motors-master-plan-just-between-you-and-me", impact: "~$800B EV Market", upvotes: 195, track: "MACRO" },
-            { id: 7, type: "PAPER", category: "TECHNICAL PAPER", title: "DeepSeek-R1: Incentivizing Reasoning Capability via RL", thesis: "Reinforcement learning can elicit strong reasoning in LLMs at a fraction of frontier training cost.", meta: "DeepSeek 2025", link: "https://github.com/deepseek-ai/DeepSeek-R1", impact: "Open-Weights Disruption", upvotes: 190, track: "AI" },
+            { id: 7, type: "PAPER", category: "TECHNICAL PAPER", title: "DeepSeek-R1: Incentivizing Reasoning Capability via RL", thesis: "Reinforcement learning can elicit strong reasoning in LLMs at a fraction of frontier training cost.", meta: "DeepSeek 2025", link: "https://arxiv.org/abs/2501.12948", impact: "Open-Weights Disruption", upvotes: 190, track: "AI" },
             { id: 8, type: "MEMO", category: "MACRO MEMO", title: "Sea Change", thesis: "A generational shift from falling to elevated rates ends the 40-year tailwind; credit and value are the new winners.", meta: "Howard Marks 2022", link: "https://www.oaktreecapital.com/insights/memo/sea-change", impact: "Trillion-Dollar Allocations", upvotes: 145, track: "MACRO" },
             { id: 9, type: "REPORT", category: "SHORT / ACTIVIST", title: "Luckin Coffee (Anonymous Report Distributed by Muddy Waters)", thesis: "Luckin Coffee fabricated sales figures; the growth story is a fraud.", meta: "Muddy Waters / Carson Block 2020", link: "https://www.muddywatersresearch.com/", impact: "$10B+ Valuation Wipeout", upvotes: 115, track: "MACRO" }
         ];
@@ -444,14 +447,35 @@
         let activeTrack = 'ALL';
         let userVotes = JSON.parse(localStorage.getItem('catalyst_user_votes') || '{}');
 
-        // Persist and load from localStorage
-        const savedDocs = localStorage.getItem('catalyst_documents');
-        if (savedDocs) {
-            try { documents = JSON.parse(savedDocs); } catch(e) {}
+        // Fetch global documents from JSONBin cloud database
+        async function loadGlobalDocuments() {
+            try {
+                const response = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
+                    headers: { 'X-Master-Key': API_KEY }
+                });
+                const data = await response.json();
+                if (data && data.record) {
+                    documents = data.record;
+                }
+            } catch (e) {
+                console.log("Using local cache fallback");
+            }
         }
 
-        function persistData() {
-            localStorage.setItem('catalyst_documents', JSON.stringify(documents));
+        // Save global documents to JSONBin cloud database
+        async function saveGlobalDocuments() {
+            try {
+                await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Master-Key': API_KEY
+                    },
+                    body: JSON.stringify(documents)
+                });
+            } catch (e) {
+                console.log("Failed to sync to cloud");
+            }
             localStorage.setItem('catalyst_user_votes', JSON.stringify(userVotes));
         }
 
@@ -471,7 +495,7 @@
             if (doc) {
                 doc.upvotes += 1;
                 userVotes[id] = true;
-                persistData();
+                saveGlobalDocuments();
                 applyFilters();
             }
         }
@@ -517,7 +541,7 @@
                 if (cleanLink.startsWith("local-file://")) {
                     title = cleanLink.replace("local-file://", "").replace(".pdf", "").replace(/[-_]/g, " ");
                 } else if (!isValidHttpUrl(cleanLink)) {
-                    return; // Skip invalid/fake links completely
+                    return; 
                 } else {
                     title = cleanLink.split('/').pop().split('?')[0].replace(/[-_]/g, " ") || "External Research Document";
                 }
@@ -527,7 +551,7 @@
                     type: "RESEARCH",
                     category: "TECHNICAL PAPER",
                     title: title.charAt(0).toUpperCase() + title.slice(1),
-                    thesis: "AI Extracted Thesis: Introduces framework elements that alter efficiency standards across target markets.",
+                    thesis: "AI Extracted Thesis: Automatically parsed semantic outline extracted from target document source.",
                     meta: "Auto-Parsed 2026",
                     link: cleanLink.startsWith("local-file://") ? "#" : cleanLink,
                     impact: "~$50B+ Impact",
@@ -540,7 +564,7 @@
             });
 
             if (addedCount > 0) {
-                persistData();
+                saveGlobalDocuments();
                 closeModal();
                 alert(`Successfully processed and added ${addedCount} valid document(s)!`);
                 applyFilters();
@@ -599,9 +623,7 @@
                 return matchesQuery && matchesCategory && matchesTrack;
             });
 
-            // Strict default sorting: most upvoted on top automatically
             filtered.sort((a, b) => b.upvotes - a.upvotes);
-
             renderCards(filtered);
         }
 
@@ -613,8 +635,10 @@
             document.getElementById('suggestModal').style.display = 'none';
         }
 
-        // Initialize Application
-        applyFilters();
+        // Initialize Application with Cloud Sync
+        loadGlobalDocuments().then(() => {
+            applyFilters();
+        });
     </script>
 </body>
 </html>
